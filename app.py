@@ -7,7 +7,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 from dash_bootstrap_templates import load_figure_template
 
-file_id ="1XmvSJLpBzT8rjAOB2C6jLB1O_7W3ruyu"
+file_id ="1YWbCavIigITOm5EtaE84CN0t1xhEmW9X"
 url = f"https://drive.google.com/file/d/{file_id}/view?usp=sharing"
 url = 'https://drive.google.com/uc?export=download&confirm=1&id='+url.split('/')[-2]
 X_public = pd.read_csv(url)
