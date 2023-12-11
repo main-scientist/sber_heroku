@@ -6,3 +6,5 @@
 `requirements.txt` - зависимости для файла с презентацией
 
 `Airbnb_Italy.ipynb` - исходный ноутбук
+
+`main.py` - портянка для `Airbnb_Italy.ipynb`
