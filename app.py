@@ -196,6 +196,7 @@ def generate_hypothesis_block(method, a, b, correlation_coefficient, p_value, si
 
 
 app.layout = dbc.Container(children=[
+    html.H2("В данный момент презентация находится в стадии разработки"),
     html.H2("Predicting Real Estate Prices from the Airbnb Portal"),
     html.H3("Content"),
     
