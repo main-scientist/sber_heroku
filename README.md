@@ -1,4 +1,7 @@
 `app.py` - презентация, в скором времени подниму на хосте
+* Запуск
+* pip install `pip install -r requirements.txt`
+* `python app.py`
 
 `requirements.txt` - зависимости для файла с презентацией
 
