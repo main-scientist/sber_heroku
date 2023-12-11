@@ -14,6 +14,8 @@ url = f"https://drive.google.com/file/d/{file_id}/view?usp=sharing"
 url = 'https://drive.google.com/uc?export=download&confirm=1&id='+url.split('/')[-2]
 X_public = pd.read_csv(url)
 
+# X_public = pd.read_csv("data/x3.csv")
+
 df_geo_city = pd.DataFrame({
     "region": ["Bergamo", "Bologna", "Firenze", "Milano", "Napoli", "Puglia", "Roma", "Sicilia", "Trentino", "Venezia"],
     "latitude_city": [45.696, 44.4938, 43.7793, 45.4643, 40.8522, 41.1175800, 41.8919, 37.50788 , 46.0679, 45.4371],
