@@ -16,7 +16,7 @@ class Airbnb():
         self.th = {
             "price_usd": {
                 "min": 10,
-                "max": 100_000
+                "max": 1_500
             }
         }
         self.models = []
@@ -113,9 +113,9 @@ class Airbnb():
     def cleaning_data(df, th, id_for_remove):
         # df = df[~df["id"].isin(id_for_remove)]
         df = df[(df["price_usd"] > th["price_usd"]["min"]) & (df["price_usd"] < th["price_usd"]["max"])]
-        # df = df.dropna(subset=["host_since", "host_is_superhost"])
-        # df = df.drop(df[df["minimum_nights"] > 365].index)
-        # df = df.drop(df[df["maximum_minimum_nights"] > 365].index)
+        df = df.dropna(subset=["host_since", "host_is_superhost"])
+        df = df.drop(df[df["minimum_nights"] > 365].index)
+        df = df.drop(df[df["maximum_minimum_nights"] > 365].index)
         return df
     
     
