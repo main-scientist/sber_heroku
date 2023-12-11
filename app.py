@@ -7,7 +7,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 from dash_bootstrap_templates import load_figure_template
 
-file_id ="1Qwastn5i5QpFJE2MNpwZ2QtuNhKzEzIj"
+file_id ="1XmvSJLpBzT8rjAOB2C6jLB1O_7W3ruyu"
 url = f"https://drive.google.com/file/d/{file_id}/view?usp=sharing"
 url = 'https://drive.google.com/uc?export=download&confirm=1&id='+url.split('/')[-2]
 X_public = pd.read_csv(url)
@@ -352,10 +352,10 @@ app.layout = dbc.Container([
     #     '''),
     # ], style={'fontSize': '18px', 'margin-left': '50px'}),
     
-    # dcc.Graph(
-    #     id='densitymapbox_price',
-    #     figure=densitymapbox_price,
-    # ),
+    dcc.Graph(
+        id='densitymapbox_price',
+        figure=densitymapbox_price,
+    ),
     
     
     html.Div([
