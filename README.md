@@ -1,5 +1,5 @@
 `app.py` - презентация, в скором времени подниму на хосте
-* Запуск
+* Запуск презентации
 * pip install `pip install -r requirements.txt`
 * `python app.py`
 
