@@ -6,6 +6,8 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 from dash_bootstrap_templates import load_figure_template
+from block_1 import create_explore_data_analysis_block
+from block_2 import create_explore_data_analysis_block_2
 
 file_id ="1YWbCavIigITOm5EtaE84CN0t1xhEmW9X"
 url = f"https://drive.google.com/file/d/{file_id}/view?usp=sharing"
@@ -268,135 +270,134 @@ app.layout = dbc.Container([
     ], style={'text-align': 'justify', 'display': 'inline-block', 'width': '50%', 'vertical-align': 'top', 'fontSize': '18px'}),
     
     
+    create_explore_data_analysis_block(),
+    create_explore_data_analysis_block_2(),
     
-    generate_hypothesis_block("Biserial", "sourse", "price_usd", 0.01143, 0.00056, 0.05, True),
-    dcc.Graph(
-        id='histogram_source',
-        figure=histogram_sourse,
-        style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
-    ),
+    # generate_hypothesis_block("Biserial", "sourse", "price_usd", 0.01143, 0.00056, 0.05, True),
+    # dcc.Graph(
+    #     id='histogram_source',
+    #     figure=histogram_sourse,
+    #     style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
+    # ),
     
-    generate_hypothesis_block("Biserial", "host_response_time", "price_usd", 0.00564, 0.08907, 0.05, False),
-    dcc.Graph(
-        id='histogram_host_response_time',
-        figure=histogram_host_response_time,
-        style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
-    ),
+    # generate_hypothesis_block("Biserial", "host_response_time", "price_usd", 0.00564, 0.08907, 0.05, False),
+    # dcc.Graph(
+    #     id='histogram_host_response_time',
+    #     figure=histogram_host_response_time,
+    #     style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
+    # ),
     
-    generate_hypothesis_block("Pearson", "host_response_rate", "price_usd", -0.02782, 0.0, 0.05, True),
-    dcc.Graph(
-        id='histogram_host_response_rate',
-        figure=histogram_host_response_rate,
-        style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
-    ), 
+    # generate_hypothesis_block("Pearson", "host_response_rate", "price_usd", -0.02782, 0.0, 0.05, True),
+    # dcc.Graph(
+    #     id='histogram_host_response_rate',
+    #     figure=histogram_host_response_rate,
+    #     style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
+    # ), 
     
-    generate_hypothesis_block("Pearson", "host_acceptance_rate", "price_usd", 0.05246, 0.0, 0.05, True),
-    dcc.Graph(
-        id='histogram_host_acceptance_rate',
-        figure=histogram_host_acceptance_rate,
-        style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
-    ), 
+    # generate_hypothesis_block("Pearson", "host_acceptance_rate", "price_usd", 0.05246, 0.0, 0.05, True),
+    # dcc.Graph(
+    #     id='histogram_host_acceptance_rate',
+    #     figure=histogram_host_acceptance_rate,
+    #     style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
+    # ), 
     
-    generate_hypothesis_block("Biserial", "host_is_superhost", "price_usd", 0.01452, 1e-05, 0.05, True),
-    dcc.Graph(
-        id='histogram_host_is_superhost',
-        figure=histogram_host_is_superhost,
-        style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
-    ), 
+    # generate_hypothesis_block("Biserial", "host_is_superhost", "price_usd", 0.01452, 1e-05, 0.05, True),
+    # dcc.Graph(
+    #     id='histogram_host_is_superhost',
+    #     figure=histogram_host_is_superhost,
+    #     style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
+    # ), 
 
-    generate_hypothesis_block("Pearson", "host_listings_count", "price_usd", 0.11413, 0.0, 0.05, True),
-    dcc.Graph(
-        id='histogram_host_listings_count',
-        figure=histogram_host_listings_count,
-        style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
-    ),
-    generate_hypothesis_block("Pearson", "host_total_listings_count", "price_usd", 0.09509, 0.0, 0.05, True),
-    dcc.Graph(
-        id='histogram_host_total_listings_count',
-        figure=histogram_host_total_listings_count,
-        style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
-    ), 
-    generate_hypothesis_block("Biserial", "host_verifications", "price_usd", 0.03171, 0.00056, 0.05, True),
-    dcc.Graph(
-        id='histogram_host_verifications',
-        figure=histogram_host_verifications,
-        style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
-    ), 
-    generate_hypothesis_block("Pearson", "accommodates", "price_usd", 0.35318, 0.00056, 0.05, True),
-    dcc.Graph(
-        id='histogram_accommodates',
-        figure=histogram_accommodates,
-        style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
-    ),
-    generate_hypothesis_block("Pearson", "number_of_reviews", "price_usd", -0.04753, 0.00056, 0.05, True),
-    dcc.Graph(
-        id='histogram_number_of_reviews',
-        figure=histogram_number_of_reviews,
-        style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
-    ),
-    generate_hypothesis_block("Pearson", "host_has_profile_pic", "price_usd", 0.01902, 0.00056, 0.05, True),
-    dcc.Graph(
-        id='histogram_host_has_profile_pic',
-        figure=histogram_host_has_profile_pic,
-        style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
-    ),
+    # generate_hypothesis_block("Pearson", "host_listings_count", "price_usd", 0.11413, 0.0, 0.05, True),
+    # dcc.Graph(
+    #     id='histogram_host_listings_count',
+    #     figure=histogram_host_listings_count,
+    #     style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
+    # ),
+    # generate_hypothesis_block("Pearson", "host_total_listings_count", "price_usd", 0.09509, 0.0, 0.05, True),
+    # dcc.Graph(
+    #     id='histogram_host_total_listings_count',
+    #     figure=histogram_host_total_listings_count,
+    #     style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
+    # ), 
+    # generate_hypothesis_block("Biserial", "host_verifications", "price_usd", 0.03171, 0.00056, 0.05, True),
+    # dcc.Graph(
+    #     id='histogram_host_verifications',
+    #     figure=histogram_host_verifications,
+    #     style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
+    # ), 
+    # generate_hypothesis_block("Pearson", "accommodates", "price_usd", 0.35318, 0.00056, 0.05, True),
+    # dcc.Graph(
+    #     id='histogram_accommodates',
+    #     figure=histogram_accommodates,
+    #     style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
+    # ),
+    # generate_hypothesis_block("Pearson", "number_of_reviews", "price_usd", -0.04753, 0.00056, 0.05, True),
+    # dcc.Graph(
+    #     id='histogram_number_of_reviews',
+    #     figure=histogram_number_of_reviews,
+    #     style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
+    # ),
+    # generate_hypothesis_block("Pearson", "host_has_profile_pic", "price_usd", 0.01902, 0.00056, 0.05, True),
+    # dcc.Graph(
+    #     id='histogram_host_has_profile_pic',
+    #     figure=histogram_host_has_profile_pic,
+    #     style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
+    # ),
     
     
     
-    html.H3("Data Engineering", style={'margin': '60px'}),
+    # html.H3("Data Engineering", style={'margin': '60px'}),
     
     
-    html.Div([
-        dcc.Markdown('''
-            Используем `latitude` и `longitude` для представления географических координат недвижимости в разных городах Италии.
-        '''),
-    ], style={'fontSize': '18px', 'margin-left': '50px'}),
+    # html.Div([
+    #     dcc.Markdown('''
+    #         Используем `latitude` и `longitude` для представления географических координат недвижимости в разных городах Италии.
+    #     '''),
+    # ], style={'fontSize': '18px', 'margin-left': '50px'}),
     
-    dcc.Graph(
-        id='densitymapbox_price',
-        figure=densitymapbox_price,
-    ),
+    # dcc.Graph(
+    #     id='densitymapbox_price',
+    #     figure=densitymapbox_price,
+    # ),
     
     
-    html.Div([
-        dcc.Markdown('''
-            Извлекая информацию из общедоступного интернет-ресурса, я получил географические координаты (долготу и широту) городов Италии, упомянутых в предоставленных данных об объектах недвижимости. 
-            Далее я вычислил расстояние каждого объекта до центра города, в котором он расположен, и создал два новых признака для анализа.
+    # html.Div([
+    #     dcc.Markdown('''
+    #         Извлекая информацию из общедоступного интернет-ресурса, я получил географические координаты (долготу и широту) городов Италии, упомянутых в предоставленных данных об объектах недвижимости. 
+    #         Далее я вычислил расстояние каждого объекта до центра города, в котором он расположен, и создал два новых признака для анализа.
 
-            Первый признак, `distance_to_centre_city`, является непрерывным и отражает фактическое расстояние в километрах от объекта недвижимости до центра города. 
+    #         Первый признак, `distance_to_centre_city`, является непрерывным и отражает фактическое расстояние в километрах от объекта недвижимости до центра города. 
 
-            Второй признак, `cat_distance`, является категориальным и представляет расстояние в определенных диапазонах. 
-            Этот признак подразумевает три категории: (from 0 to 3, from 3 to 100, from 300), что позволяет упростить восприятие и анализ данных, разбивая объекты недвижимости на группы по их удаленности от центра города.
-        '''),
-    ], style={'text-align': 'justify', 'fontSize': '18px', 'margin-left': '50px', 'margin-top': '50px', 'margin-right': '70px', 'display': 'inline-block', 'width': '50%'}),
+    #         Второй признак, `cat_distance`, является категориальным и представляет расстояние в определенных диапазонах. 
+    #         Этот признак подразумевает три категории: (from 0 to 3, from 3 to 100, from 300), что позволяет упростить восприятие и анализ данных, разбивая объекты недвижимости на группы по их удаленности от центра города.
+    #     '''),
+    # ], style={'text-align': 'justify', 'fontSize': '18px', 'margin-left': '50px', 'margin-top': '50px', 'margin-right': '70px', 'display': 'inline-block', 'width': '50%'}),
     
-    html.Div([
-        DataTable(
-        id='geo-table',
-        columns=[
-            {'name': col, 'id': col} for col in df_geo_city.columns
-        ],
-        data=df_geo_city.to_dict('records'),
-        style_cell={'color': 'white', 'backgroundColor': '#000', 'textAlign': 'center'},
-    ),
-    ], style={'display': 'inline-block', 'width': '30%', 'vertical-align': 'top', 'margin-top': '50px'}),
-    
-    
+    # html.Div([
+    #     DataTable(
+    #     id='geo-table',
+    #     columns=[
+    #         {'name': col, 'id': col} for col in df_geo_city.columns
+    #     ],
+    #     data=df_geo_city.to_dict('records'),
+    #     style_cell={'color': 'white', 'backgroundColor': '#000', 'textAlign': 'center'},
+    # ),
+    # ], style={'display': 'inline-block', 'width': '30%', 'vertical-align': 'top', 'margin-top': '50px'}),
     
     
-    
-    generate_hypothesis_block("Pearson", "distance_to_centre_city", "price_usd", -0.09707, 0.0, 0.05, True),
-    dcc.Graph(
-        id='histogram_distance_to_centre_city',
-        figure=histogram_distance_to_centre_city,
-        style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
-    ),
-    generate_hypothesis_block("Pearson", "cat_distance", "price_usd", -0.02601, 0.0, 0.05, True),
-    dcc.Graph(
-        id='histogram_cat_distance',
-        figure=histogram_cat_distance,
-        style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
-    ),
+    # generate_hypothesis_block("Pearson", "distance_to_centre_city", "price_usd", -0.09707, 0.0, 0.05, True),
+    # dcc.Graph(
+    #     id='histogram_distance_to_centre_city',
+    #     figure=histogram_distance_to_centre_city,
+    #     style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
+    # ),
+    # generate_hypothesis_block("Pearson", "cat_distance", "price_usd", -0.02601, 0.0, 0.05, True),
+    # dcc.Graph(
+    #     id='histogram_cat_distance',
+    #     figure=histogram_cat_distance,
+    #     style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
+    # ),
     
     
     html.Div("", style={
