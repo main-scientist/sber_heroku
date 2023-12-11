@@ -31,7 +31,7 @@ mean_longitude = X_public['longitude'].mean()
 
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.DARKLY])
 
-server = app.server
+# server = app.server
 
 dark_theme = {
     "main-background": "#000000",
@@ -407,4 +407,5 @@ app.layout = dbc.Container([
 )
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run(debug=True)
+    # app.run_server(debug=True)
