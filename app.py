@@ -515,13 +515,77 @@ app.layout = dbc.Container(children=[
             * Gradient Boosting with BayesianOptimization (CatBoost)
             * Aggregation Gradient Boosting with BayesianOptimization (CatBoost)
             * Bagging over Gradient Boosting with BayesianOptimization (num_samples=7, 50% of the general population, CatBoost)
+            
+                Данный способ показал лучший результат "бизнес метрики", но я считаю данную модель некомпетентной. Об этом далее.
+            
             * Two-level Gradient Boosting Gradient Boosting with BayesianOptimization (CatBoost)
             
                 Разделение генеральной совокупности на две выборки по целевому признаку [μ - 3σ : μ + σ] | [μ + σ : μ + 3σ]
+
+                Обучение классификатора CatBoost with BayesianOptimization.
+                
+                Данный способ показал лучший результат по метрике MAE.
+                
             * Three-level Gradient Boosting Gradient Boosting with BayesianOptimization (CatBoost)
             * Four-level Gradient Boosting Gradient Boosting with BayesianOptimization (CatBoost)
         '''),
-    ], id="comparative-analysis-models", style={'fontSize': '18px', 'margin-left': '50px', "width": "1200px", "margin-top": "40px"}),
+    ], style={'fontSize': '18px', 'margin-left': '50px', "width": "1200px", "margin-top": "40px"}),
+    
+    
+    html.Div(["Loss Function and Target Selection Table"], style={'fontSize': '22px', 'margin-left': '50px', "margin-top": "40px"}),
+    
+    html.Div([
+        dash_table.DataTable(
+            id='loss-function-table',
+            columns=[
+                {'name': 'General Population Interval', 'id': 'interval'},
+                {'name': 'Log Target', 'id': 'log_target'},
+                {'name': 'Loss Function', 'id': 'loss_function'},
+            ],
+            data=[
+                {'interval': '[μ - 3σ : μ + σ]', 'log_target': 'TRUE', 'loss_function': 'RMSE'},
+                {'interval': '[μ + σ : μ + 5σ]', 'log_target': 'TRUE', 'loss_function': 'MAPE'},
+                {'interval': '[μ + 5σ : +inf)', 'log_target': 'FALSE', 'loss_function': 'MAPE'},
+            ],
+            style_table={'overflowX': 'auto', 'width': '500px', 'margin-left': '50px'},
+            style_cell={'textAlign': 'center', 'overflow': 'hidden', 'textOverflow': 'ellipsis','color': 'white', 'backgroundColor': '#000'}
+        ),
+        ],
+        style={'display': 'inline-block', 'width': '50%'}
+    ),
+    
+    html.Div(['''Я использовал логарифмирование целевого признакак так как это стабилизирует дисперсию что было очень критично и cнижает влияния выбросов.
+              Использоввние MAPE как финкции потерь обусловлено обеспечение однородность в ошибках, даже если фактические значения имеют разные порядки величин, 
+              отражает точность прогноза в процентах и может быть более информативной в контексте моей задачи, а также менее чувствителен к выбросам'''],
+            style={'text-align': 'justify', 'display': 'inline-block', 'width': '40%', 'vertical-align': 'top', 'fontSize': '18px'}
+            ),
+
+
+    html.Div(["Comparison of Models Based on Log Target Intervals and Loss Functions"], style={'fontSize': '22px', 'margin-left': '50px', "margin-top": "50px", "margin-bottom": "10px"}),
+    
+    dash_table.DataTable(
+        id='comparison-table',
+        columns=[
+            {'name': 'Interval', 'id': 'interval'},
+            {'name': 'Two-level GB', 'id': 'two_level_gb'},
+            {'name': 'Three-level GB', 'id': 'three_level_gb'},
+            {'name': 'Four-level GB', 'id': 'four_level_gb'},
+            {'name': 'Earned relative total value', 'id': 'earned_relative_total_value'},
+        ],
+        data=[
+            {'interval': '[μ - 3σ : μ + σ]', 'two_level_gb': 'Log Target RMSE', 'three_level_gb': 'Log Target RMSE', 'four_level_gb': 'Log Target RMSE', 'earned_relative_total_value': '45%'},
+            {'interval': '[μ + σ : μ + 3σ]', 'two_level_gb': 'Log Target MAPE', 'three_level_gb': 'Log Target MAPE', 'four_level_gb': 'Log Target MAPE', 'earned_relative_total_value': '32%'},
+            {'interval': '[μ + 3σ : μ + 5σ]', 'two_level_gb': '-', 'three_level_gb': 'Log Target MAPE', 'four_level_gb': 'Log Target MAPE', 'earned_relative_total_value': '22%'},
+            {'interval': '[μ + 5σ : μ + 12σ]', 'two_level_gb': '-', 'three_level_gb': '-', 'four_level_gb': 'Log Target MAPE', 'earned_relative_total_value': '18%'},
+        ],
+        style_table={'margin-left': '50px', "width": "1000px"},
+        style_cell={'textAlign': 'center','color': 'white', 'backgroundColor': '#000'},
+    ),
+    
+    
+    
+    
+    
     
     
     html.Div(''' 
