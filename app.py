@@ -6,15 +6,11 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 from dash_bootstrap_templates import load_figure_template
-# from block_1 import create_explore_data_analysis_block
-# from block_2 import create_explore_data_analysis_block_2
 
 file_id ="1YWbCavIigITOm5EtaE84CN0t1xhEmW9X"
 url = f"https://drive.google.com/file/d/{file_id}/view?usp=sharing"
 url = 'https://drive.google.com/uc?export=download&confirm=1&id='+url.split('/')[-2]
 X_public = pd.read_csv(url)
-
-# X_public = pd.read_csv("data/x3.csv")
 
 df_geo_city = pd.DataFrame({
     "region": ["Bergamo", "Bologna", "Firenze", "Milano", "Napoli", "Puglia", "Roma", "Sicilia", "Trentino", "Venezia"],
@@ -195,6 +191,15 @@ def generate_hypothesis_block(method, a, b, correlation_coefficient, p_value, si
 
 
 
+
+
+
+
+
+
+
+
+
 app.layout = dbc.Container(children=[
     html.H2("В данный момент презентация находится в стадии разработки"),
     html.H2("Predicting Real Estate Prices from the Airbnb Portal"),
@@ -204,9 +209,11 @@ app.layout = dbc.Container(children=[
     - [Explore Data Analysis](#explore-data-analysis)
     - [Data Preparation](#data-preparation)
     - [Feature Engineering](#feature-engineering)
-    '''),
+    - [Modeling](#modeling)
+        - [Comparative analysis of models](#comparative-analysis-models)
+    ''', style={'position': 'fixed', 'top': 0, 'left': 0, 'background-color': '#000000', 'padding': '15px', 'z-index': 1000, "border-radius":"10px"}),
     
-    html.H3("Explore Data Analysis", style={'margin': '50px'}),
+    html.H3("Explore Data Analysis", id="explore-data-analysis", style={'margin': '50px'}),
 
     html.H4("Data Frame - Public", style={'margin-left': '50px'}),
     
@@ -220,27 +227,27 @@ app.layout = dbc.Container(children=[
         style_cell={'maxWidth': 300, 'textAlign': 'center', 'overflow': 'hidden', 'textOverflow': 'ellipsis', 'color': 'white', 'backgroundColor': '#000'},
     ),
     
-    dcc.Graph(
-        id='heatmap',
-        figure=heatmap_fig,
-        style={'border': '2px solid black', "margin-bottom":"50px"}
-    ),
+    # dcc.Graph(
+    #     id='heatmap',
+    #     figure=heatmap_fig,
+    #     style={'border': '2px solid black', "margin-bottom":"50px"}
+    # ),
     
     dcc.Markdown('''
         ### Target - Price
         Заметим, что денежные значения у целового признака представлены в разных валютах '$' '€' '₽'.
         
-        В наборе данных присутсвует признак "calendar_last_scraped" - "последние обновление данных". Эти даты я собираюсь использовать для конвертации валют по корректному курсу.
+        В наборе данных присутсвует признак `calendar_last_scraped` - "последние обновление данных". Эти даты я собираюсь использовать для конвертации валют по корректному курсу.
         
         Возьмем курсы валют с официального портала Банк России и конвертируем валюты.
     ''', style={'margin-left': '50px','fontSize': '18px'}),
     
     
-    dcc.Graph(
-        id='price_fig',
-        figure=price_fig,
-        style={'border': '2px solid black', "margin-bottom":"20px"}
-    ),
+    # dcc.Graph(
+    #     id='price_fig',
+    #     figure=price_fig,
+    #     style={'border': '2px solid black', "margin-bottom":"20px"}
+    # ),
     
     
     html.Div([
@@ -276,59 +283,59 @@ app.layout = dbc.Container(children=[
     # create_explore_data_analysis_block(),
     # create_explore_data_analysis_block_2(),
     
-    generate_hypothesis_block("Biserial", "sourse", "price_usd", 0.01143, 0.00056, 0.05, True),
-    dcc.Graph(
-        id='histogram_source',
-        figure=histogram_sourse,
-        style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
-    ),
+    # generate_hypothesis_block("Biserial", "sourse", "price_usd", 0.01143, 0.00056, 0.05, True),
+    # dcc.Graph(
+    #     id='histogram_source',
+    #     figure=histogram_sourse,
+    #     style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
+    # ),
     
-    generate_hypothesis_block("Biserial", "host_response_time", "price_usd", 0.00564, 0.08907, 0.05, False),
-    dcc.Graph(
-        id='histogram_host_response_time',
-        figure=histogram_host_response_time,
-        style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
-    ),
+    # generate_hypothesis_block("Biserial", "host_response_time", "price_usd", 0.00564, 0.08907, 0.05, False),
+    # dcc.Graph(
+    #     id='histogram_host_response_time',
+    #     figure=histogram_host_response_time,
+    #     style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
+    # ),
     
-    generate_hypothesis_block("Pearson", "host_response_rate", "price_usd", -0.02782, 0.0, 0.05, True),
-    dcc.Graph(
-        id='histogram_host_response_rate',
-        figure=histogram_host_response_rate,
-        style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
-    ), 
+    # generate_hypothesis_block("Pearson", "host_response_rate", "price_usd", -0.02782, 0.0, 0.05, True),
+    # dcc.Graph(
+    #     id='histogram_host_response_rate',
+    #     figure=histogram_host_response_rate,
+    #     style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
+    # ), 
     
-    generate_hypothesis_block("Pearson", "host_acceptance_rate", "price_usd", 0.05246, 0.0, 0.05, True),
-    dcc.Graph(
-        id='histogram_host_acceptance_rate',
-        figure=histogram_host_acceptance_rate,
-        style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
-    ), 
+    # generate_hypothesis_block("Pearson", "host_acceptance_rate", "price_usd", 0.05246, 0.0, 0.05, True),
+    # dcc.Graph(
+    #     id='histogram_host_acceptance_rate',
+    #     figure=histogram_host_acceptance_rate,
+    #     style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
+    # ), 
     
-    generate_hypothesis_block("Biserial", "host_is_superhost", "price_usd", 0.01452, 1e-05, 0.05, True),
-    dcc.Graph(
-        id='histogram_host_is_superhost',
-        figure=histogram_host_is_superhost,
-        style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
-    ), 
+    # generate_hypothesis_block("Biserial", "host_is_superhost", "price_usd", 0.01452, 1e-05, 0.05, True),
+    # dcc.Graph(
+    #     id='histogram_host_is_superhost',
+    #     figure=histogram_host_is_superhost,
+    #     style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
+    # ), 
 
-    generate_hypothesis_block("Pearson", "host_listings_count", "price_usd", 0.11413, 0.0, 0.05, True),
-    dcc.Graph(
-        id='histogram_host_listings_count',
-        figure=histogram_host_listings_count,
-        style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
-    ),
-    generate_hypothesis_block("Pearson", "host_total_listings_count", "price_usd", 0.09509, 0.0, 0.05, True),
-    dcc.Graph(
-        id='histogram_host_total_listings_count',
-        figure=histogram_host_total_listings_count,
-        style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
-    ), 
-    generate_hypothesis_block("Biserial", "host_verifications", "price_usd", 0.03171, 0.00056, 0.05, True),
-    dcc.Graph(
-        id='histogram_host_verifications',
-        figure=histogram_host_verifications,
-        style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
-    ), 
+    # generate_hypothesis_block("Pearson", "host_listings_count", "price_usd", 0.11413, 0.0, 0.05, True),
+    # dcc.Graph(
+    #     id='histogram_host_listings_count',
+    #     figure=histogram_host_listings_count,
+    #     style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
+    # ),
+    # generate_hypothesis_block("Pearson", "host_total_listings_count", "price_usd", 0.09509, 0.0, 0.05, True),
+    # dcc.Graph(
+    #     id='histogram_host_total_listings_count',
+    #     figure=histogram_host_total_listings_count,
+    #     style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
+    # ), 
+    # generate_hypothesis_block("Biserial", "host_verifications", "price_usd", 0.03171, 0.00056, 0.05, True),
+    # dcc.Graph(
+    #     id='histogram_host_verifications',
+    #     figure=histogram_host_verifications,
+    #     style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
+    # ), 
     generate_hypothesis_block("Pearson", "accommodates", "price_usd", 0.35318, 0.00056, 0.05, True),
     dcc.Graph(
         id='histogram_accommodates',
@@ -350,7 +357,7 @@ app.layout = dbc.Container(children=[
     
     
     
-    html.H3("Data Engineering", style={'margin': '60px'}),
+    html.H3("Feature Engineering", id="feature-engineering", style={'margin': '60px'}),
     
     
     html.Div([
@@ -359,10 +366,10 @@ app.layout = dbc.Container(children=[
         '''),
     ], style={'fontSize': '18px', 'margin-left': '50px'}),
     
-    dcc.Graph(
-        id='densitymapbox_price',
-        figure=densitymapbox_price,
-    ),
+    # dcc.Graph(
+    #     id='densitymapbox_price',
+    #     figure=densitymapbox_price,
+    # ),
     
     
     html.Div([
@@ -395,7 +402,7 @@ app.layout = dbc.Container(children=[
         figure=histogram_distance_to_centre_city,
         style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
     ),
-    generate_hypothesis_block("Pearson", "cat_distance", "price_usd", -0.02601, 0.0, 0.05, True),
+    generate_hypothesis_block("Biserial", "cat_distance", "price_usd", -0.02601, 0.0, 0.05, True),
     dcc.Graph(
         id='histogram_cat_distance',
         figure=histogram_cat_distance,
@@ -403,11 +410,135 @@ app.layout = dbc.Container(children=[
     ),
     
     
-    html.Div("", style={
-        'height': '200px'
-    }),  
+    html.Div([
+        dcc.Markdown('''
+            Признаки которые были сгенерериваны из имеющихся данный 
+            
+            * `difference_review` - разница между признаками `first_review` и `last_review`, пропущенные значения были заполнены медианой.
+            * `len_description` - длинна символов признака description.
+            * `bathrooms_num2` - добавление квадратичного члена к признаку `bathrooms` для учета нелинейных взаимосвязей
+            * `bedrooms_num2`- добавление квадратичного члена к признаку `bedrooms` для учета нелинейных взаимосвязей
+            * `beds_num2` - добавление квадратичного члена к признаку `beds` для учета нелинейных взаимосвязей
+            * `person_per_bathrooms` - кол-во человек на ванную комнату
+            * `person_per_bedrooms`- кол-во человек на спальную комнату
+            * `person_per_beds` - кол-во человек на кровать
+            * Эти признаки (3 последних) могут давать представление о плотности проживания или комфорте для каждого измерения пространства.
+        '''),
+    ], style={'fontSize': '18px', 'margin-left': '50px', "margin-top": "20px"}),
+    
+    
+    
+    
+    html.H3("Modeling", id="modeling", style={'margin-left': '50px', 'margin-top': '70px', 'margin-bottom': '40px'}),
+    
+    html.Div([
+        dcc.Markdown('''
+            В качестве модели был выбран градиентный бустинг, в качестве реализации была выбрана бибилиотека catboost.
+            
+            Почему ?
+            
+            CatBoost эффективно обрабатывает категориальные признаки `cat_features` "из коробки" используя метод кодирования, основанный на изменении значений таргета.
+            
+            CatBoost поддерживает работу с текстовыми данными.
+            - Loading and storing text features
+            - Tokenization
+            - Dictionary creation
+            - Converting strings to numbers (Each string from the text feature is converted to a token identifier from the dictionary)
+            - Estimating numerical features (Numerical features are calculated based on the source tokenized)
+        '''),
+    ], style={'fontSize': '18px', 'margin-left': '50px', "width": "900px"}),
+    
+    html.Div([
+        dcc.Markdown('''
+           Для подбора гиперпараметров был выбран байесовский оптимизатор
+           
+           Это метод использует байесовский подход для поиска глобального экстремума (минимума или максимума) неизвестной целевой функции. 
+           
+           Основная идея заключается в том, чтобы использовать вероятностную модель для целевой функции и выбирать следующие точки для оценки так, чтобы максимизировать ожидаемое улучшение результатов.
+           
+           В качестве реализации была выбрана бибилиотека [BayesianOptimization](https://github.com/bayesian-optimization/BayesianOptimization).
+        '''),
+    ], style={'fontSize': '18px', 'margin-left': '50px', "width": "900px", "margin-top": "40px"}),
+    
+    
+    dcc.Markdown('''
+        Код осуществляет оптимизацию гиперпараметров для модели CatBoostRegressor с использованием байесовской оптимизации. 
+        Оптимизация проводится путем минимизации RMSE, оцененной на основе кросс-валидации с тремя фолдами
+
+        ```python
+        def cat_eval(iterations, depth, learning_rate, l2_leaf_reg, min_data_in_leaf, cat_features, text_features):
+        params = {
+            'iterations': int(iterations),
+            'depth': int(depth),
+            'learning_rate': learning_rate,
+            'l2_leaf_reg': l2_leaf_reg,
+            'min_data_in_leaf': int(min_data_in_leaf),
+            'loss_function': 'RMSE',
+            'eval_metric': 'MAE',
+            'cat_features': cat_features,
+            'text_features': text_features,
+            'verbose': False
+        }
+    
+        cv_scores = cross_val_score(catboost.CatBoostRegressor(**params), 
+                                    X_public_encoded_null.drop("price_usd", axis=1), y_public_null, cv=3, 
+                                    scoring='neg_mean_squared_error')
+        return cv_scores.mean()
+
+        pbounds = {
+            'iterations': (100, 4000),
+            'depth': (4, 10),
+            'learning_rate': (0.001, 0.1),
+            'l2_leaf_reg': (1, 10),
+            'min_data_in_leaf': (1, 40),
+            "cat_features": cat_features,
+            "text_features": text_features
+        }
+
+        cat_opt = BayesianOptimization(
+            f=cat_eval,
+            pbounds=pbounds
+        )
+
+        cat_opt.maximize(n_iter=4, init_points=3)
+        ```''', style={'background-color': '#333', "padding-top": "10px"}),
+    
+    
+    
+    html.H4("Comparative analysis of models", id="comparative-analysis-models", style={'margin-left': '50px', "margin-top": "40px"}),
+    
+    html.Div([
+        dcc.Markdown('''
+            Я перепепробовал множество различных подходов моделирования:
+            
+            * Simple Gradient Boosting (CatBoost)
+            * Gradient Boosting with BayesianOptimization (CatBoost)
+            * Aggregation Gradient Boosting with BayesianOptimization (CatBoost)
+            * Bagging over Gradient Boosting with BayesianOptimization (num_samples=7, 50% of the general population, CatBoost)
+            * Two-level Gradient Boosting Gradient Boosting with BayesianOptimization (CatBoost)
+            
+                Разделение генеральной совокупности на две выборки по целевому признаку [μ - 3σ : μ + σ] | [μ + σ : μ + 3σ]
+            * Three-level Gradient Boosting Gradient Boosting with BayesianOptimization (CatBoost)
+            * Four-level Gradient Boosting Gradient Boosting with BayesianOptimization (CatBoost)
+        '''),
+    ], id="comparative-analysis-models", style={'fontSize': '18px', 'margin-left': '50px', "width": "1200px", "margin-top": "40px"}),
+    
+    
+    html.Div(''' 
+             Признаки которые можно было добавить:
+             Криминальность района
+             Доход района - Средний доход жителей района, в котором находится жилье. Это может влиять на уровень цен на аренду
+             Индекс стоимости жизни - Индекс, отражающий общую стоимость жизни в конкретном городе или районе. Это может влиять на уровень цен
+             Уровень безработицы - Процент безработных в районе может быть связан с общим спросом на аренду
+             Инфляция - Уровень инфляции может влиять на уровень цен на жилье
+             Стоимость коммунальных услуг в Италии
+             Ставка привлечения капитала - Процентная ставка или ставка привлечения капитала может влиять на инвестиции в недвижимость
+             Ставка налога на недвижимость - Сведения о ставке налога на недвижимость в конкретном районе
+             Инвестиционные показатели - Например, количество новых строительств и инвестиций в недвижимость3 
+             Показатели финансовой стабильности - Например, рейтинги кредитоспособности района или города
+             ''', style={'height': '200px', "margin-top": "30px"}),  
 ], 
-                      style={"backgroundColor": dark_theme["main-background"]}, 
+    style={"backgroundColor": dark_theme["main-background"]}, 
 )
 
 if __name__ == '__main__':
