@@ -6,6 +6,8 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 from dash_bootstrap_templates import load_figure_template
+from dash.dependencies import Input, Output
+import time
 
 file_id ="1YWbCavIigITOm5EtaE84CN0t1xhEmW9X"
 url = f"https://drive.google.com/file/d/{file_id}/view?usp=sharing"
@@ -24,12 +26,6 @@ X_public['longitude'] = pd.to_numeric(X_public['longitude'], errors='coerce')
 mean_latitude = X_public['latitude'].mean()
 mean_longitude = X_public['longitude'].mean()
 
-
-# app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP],
-#                 meta_tags=[{'name': 'viewport',
-#                             'content': 'width=device-width, initial-scale=1.0'}]
-#                   )
-
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.DARKLY])
 
 server = app.server
@@ -45,7 +41,7 @@ dark_theme = {
 heatmap_data = pd.isnull(X_public)
 heatmap_fig = px.imshow(heatmap_data, 
                         labels=dict(color="Null Values"), 
-                        color_continuous_scale='Viridis', title="Number of null value", template='darkly')
+                        color_continuous_scale='Viridis', title="Number of null values", template='darkly')
 heatmap_fig.update_layout(height=800)
 median_price = X_public["price_usd"].median()
 mean_price = X_public["price_usd"].mean()
@@ -155,8 +151,8 @@ densitymapbox_price.update_layout(
     ],
 )
 
-# func
 
+# func
 def generate_hypothesis_block(method, a, b, correlation_coefficient, p_value, significance_level, reject_null_hypothesis):
     return html.Div([
         dcc.Markdown(f'''
@@ -190,7 +186,11 @@ def generate_hypothesis_block(method, a, b, correlation_coefficient, p_value, si
 app.layout = dbc.Container(children=[
     html.H2("В данный момент презентация находится в стадии разработки"),
     html.H2("Predicting Real Estate Prices from the Airbnb Portal"),
-    html.H3("Content"),
+    
+    dcc.Markdown('''
+       Плотников Иван Андреевич
+    ''', style={"font-size": "18px", "margin-bottom": "20px", "margin-top": "20px", 'margin-left': '50px'}),
+    
     
     dcc.Markdown('''
     - [Explore Data Analysis](#explore-data-analysis)
@@ -198,9 +198,11 @@ app.layout = dbc.Container(children=[
     - [Feature Engineering](#feature-engineering)
     - [Modeling](#modeling)
         - [Comparative analysis of models](#comparative-analysis-models)
+    - [Comment](#comments)
     ''', style={'position': 'fixed', 'top': "30px", 'left': "10px", 'background-color': '#000000', 'padding-top': '15px', 'padding-left': '3px', 
                 'z-index': 1000, "border-radius":"10px", "width": "220px"}),
     
+    html.Hr(),
     html.H3("Explore Data Analysis", id="explore-data-analysis", style={'margin': '50px'}),
 
     html.H4("Data Frame - Public", style={'margin-left': '50px', "margin-buttom": "20px"}),
@@ -229,16 +231,16 @@ app.layout = dbc.Container(children=[
         columns=[
             {'name': col, 'id': col} for col in X_public.columns
         ],
-        data=X_public.head(2).to_dict('records'),  # Display the first 2 rows
+        data=X_public.head(2).to_dict('records'),
         style_table={'overflowX': 'auto', 'width': '100%'},
         style_cell={'maxWidth': 300, 'textAlign': 'center', 'overflow': 'hidden', 'textOverflow': 'ellipsis', 'color': 'white', 'backgroundColor': '#000'},
     ),
     
-    # dcc.Graph(
-    #     id='heatmap',
-    #     figure=heatmap_fig,
-    #     style={'border': '2px solid black', "margin-bottom":"50px"}
-    # ),
+    dcc.Graph(
+        id='heatmap',
+        figure=heatmap_fig,
+        style={'border': '2px solid black', "margin-bottom":"50px"}
+    ),
     
     dcc.Markdown('''
         ### Target - Price
@@ -250,11 +252,11 @@ app.layout = dbc.Container(children=[
     ''', style={'margin-left': '50px','fontSize': '18px'}),
     
     
-    # dcc.Graph(
-    #     id='price_fig',
-    #     figure=price_fig,
-    #     style={'border': '2px solid black', "margin-bottom":"20px"}
-    # ),
+    dcc.Graph(
+        id='price_fig',
+        figure=price_fig,
+        style={'border': '2px solid black', "margin-bottom":"20px"}
+    ),
     
     
     html.Div([
@@ -287,65 +289,65 @@ app.layout = dbc.Container(children=[
     ], style={'text-align': 'justify', 'display': 'inline-block', 'width': '50%', 'vertical-align': 'top', 'fontSize': '18px'}),
     
     
-    # generate_hypothesis_block("Biserial", "sourse", "price_usd", 0.01143, 0.00056, 0.05, True),
-    # dcc.Graph(
-    #     id='histogram_source',
-    #     figure=histogram_sourse,
-    #     style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
-    # ),
+    generate_hypothesis_block("Biserial", "sourse", "price_usd", 0.01143, 0.00056, 0.05, True),
+    dcc.Graph(
+        id='histogram_source',
+        figure=histogram_sourse,
+        style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
+    ),
     
-    # generate_hypothesis_block("Biserial", "host_response_time", "price_usd", 0.00564, 0.08907, 0.05, False),
-    # dcc.Graph(
-    #     id='histogram_host_response_time',
-    #     figure=histogram_host_response_time,
-    #     style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
-    # ),
+    generate_hypothesis_block("Biserial", "host_response_time", "price_usd", 0.00564, 0.08907, 0.05, False),
+    dcc.Graph(
+        id='histogram_host_response_time',
+        figure=histogram_host_response_time,
+        style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
+    ),
     
-    # generate_hypothesis_block("Pearson", "host_response_rate", "price_usd", -0.02782, 0.0, 0.05, True),
-    # dcc.Graph(
-    #     id='histogram_host_response_rate',
-    #     figure=histogram_host_response_rate,
-    #     style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
-    # ), 
+    generate_hypothesis_block("Pearson", "host_response_rate", "price_usd", -0.02782, 0.0, 0.05, True),
+    dcc.Graph(
+        id='histogram_host_response_rate',
+        figure=histogram_host_response_rate,
+        style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
+    ), 
     
-    # generate_hypothesis_block("Pearson", "host_acceptance_rate", "price_usd", 0.05246, 0.0, 0.05, True),
-    # dcc.Graph(
-    #     id='histogram_host_acceptance_rate',
-    #     figure=histogram_host_acceptance_rate,
-    #     style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
-    # ), 
+    generate_hypothesis_block("Pearson", "host_acceptance_rate", "price_usd", 0.05246, 0.0, 0.05, True),
+    dcc.Graph(
+        id='histogram_host_acceptance_rate',
+        figure=histogram_host_acceptance_rate,
+        style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
+    ), 
     
-    # generate_hypothesis_block("Biserial", "host_is_superhost", "price_usd", 0.01452, 1e-05, 0.05, True),
-    # dcc.Graph(
-    #     id='histogram_host_is_superhost',
-    #     figure=histogram_host_is_superhost,
-    #     style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
-    # ), 
+    generate_hypothesis_block("Biserial", "host_is_superhost", "price_usd", 0.01452, 1e-05, 0.05, True),
+    dcc.Graph(
+        id='histogram_host_is_superhost',
+        figure=histogram_host_is_superhost,
+        style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
+    ), 
 
-    # generate_hypothesis_block("Pearson", "host_listings_count", "price_usd", 0.11413, 0.0, 0.05, True),
-    # dcc.Graph(
-    #     id='histogram_host_listings_count',
-    #     figure=histogram_host_listings_count,
-    #     style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
-    # ),
-    # generate_hypothesis_block("Pearson", "host_total_listings_count", "price_usd", 0.09509, 0.0, 0.05, True),
-    # dcc.Graph(
-    #     id='histogram_host_total_listings_count',
-    #     figure=histogram_host_total_listings_count,
-    #     style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
-    # ), 
-    # generate_hypothesis_block("Biserial", "host_verifications", "price_usd", 0.03171, 0.00056, 0.05, True),
-    # dcc.Graph(
-    #     id='histogram_host_verifications',
-    #     figure=histogram_host_verifications,
-    #     style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
-    # ), 
-    # generate_hypothesis_block("Pearson", "accommodates", "price_usd", 0.35318, 0.00056, 0.05, True),
-    # dcc.Graph(
-    #     id='histogram_accommodates',
-    #     figure=histogram_accommodates,
-    #     style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
-    # ),
+    generate_hypothesis_block("Pearson", "host_listings_count", "price_usd", 0.11413, 0.0, 0.05, True),
+    dcc.Graph(
+        id='histogram_host_listings_count',
+        figure=histogram_host_listings_count,
+        style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
+    ),
+    generate_hypothesis_block("Pearson", "host_total_listings_count", "price_usd", 0.09509, 0.0, 0.05, True),
+    dcc.Graph(
+        id='histogram_host_total_listings_count',
+        figure=histogram_host_total_listings_count,
+        style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
+    ), 
+    generate_hypothesis_block("Biserial", "host_verifications", "price_usd", 0.03171, 0.00056, 0.05, True),
+    dcc.Graph(
+        id='histogram_host_verifications',
+        figure=histogram_host_verifications,
+        style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
+    ), 
+    generate_hypothesis_block("Pearson", "accommodates", "price_usd", 0.35318, 0.00056, 0.05, True),
+    dcc.Graph(
+        id='histogram_accommodates',
+        figure=histogram_accommodates,
+        style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
+    ),
     generate_hypothesis_block("Pearson", "number_of_reviews", "price_usd", -0.04753, 0.00056, 0.05, True),
     dcc.Graph(
         id='histogram_number_of_reviews',
@@ -354,7 +356,7 @@ app.layout = dbc.Container(children=[
     ),
     
     
-    
+    html.Hr(),
     html.H3("Data Preparation", id="data-preparation", style={'margin': '50px'}),
     
     
@@ -380,7 +382,7 @@ app.layout = dbc.Container(children=[
     
     
     
-    
+    html.Hr(),
     html.H3("Feature Engineering", id="feature-engineering", style={'margin': '50px'}),
     
     
@@ -390,10 +392,10 @@ app.layout = dbc.Container(children=[
         '''),
     ], style={'fontSize': '18px', 'margin-left': '50px'}),
     
-    # dcc.Graph(
-    #     id='densitymapbox_price',
-    #     figure=densitymapbox_price,
-    # ),
+    dcc.Graph(
+        id='densitymapbox_price',
+        figure=densitymapbox_price,
+    ),
     
     
     html.Div([
@@ -436,7 +438,7 @@ app.layout = dbc.Container(children=[
     
     html.Div([
         dcc.Markdown('''
-            Признаки которые были сгенерериваны из имеющихся данный 
+            Признаки которые были сгенерериваны из имеющихся данный:
             
             * `difference_review` - разница между признаками `first_review` и `last_review`, пропущенные значения были заполнены медианой.
             * `len_description` - длина символов признака description.
@@ -448,9 +450,28 @@ app.layout = dbc.Container(children=[
             * `person_per_beds` - кол-во человек на кровать.
             * Эти признаки (3 последних) могут давать представление о плотности проживания или комфорте для каждого измерения пространства.
         '''),
-    ], style={'fontSize': '18px', 'margin-left': '50px', "margin-top": "20px"}),    
+    ], style={'fontSize': '18px', 'margin-left': '50px', "margin-top": "20px"}),
+    
+    html.Div([
+        dcc.Markdown('''
+            Признаки которые можно было добавить:
+            * Криминальность района.
+            * Расстояние до достопримечательностей по городам.
+            * Дход района - Средний доход жителей района, в котором находится жилье. Это может влиять на уровень цен на аренду.
+            * Индекс стоимости жизни - Индекс, отражающий общую стоимость жизни в конкретном городе или районе. Это может влиять на уровень цен.
+            * Расстояние до транспортной инфраструктуры..
+            * Уровень безработицы - Процент безработных в районе может быть связан с общим спросом на аренду.
+            * Инфляция - Уровень инфляции может влиять на уровень цен на жилье.
+            * Стоимость коммунальных услуг в Италии.
+            * Ставка привлечения капитала - Процентная ставка или ставка привлечения капитала может влиять на инвестиции в недвижимость.
+            * Ставка налога на недвижимость - Сведения о ставке налога на недвижимость в конкретном районе.
+            * Инвестиционные показатели - Например, количество новых строительств и инвестиций в недвижимость.
+            * Показатели финансовой стабильности - Например, рейтинги кредитоспособности района или города.
+            '''),
+    ], style={'text-align': 'justify', 'width': '80%', "margin-left": "50px", 'fontSize': '18px'}),
     
     
+    html.Hr(),
     html.H3("Modeling", id="modeling", style={'margin-left': '50px', 'margin-top': '70px', 'margin-bottom': '40px'}),
     
     html.Div([
@@ -604,25 +625,64 @@ app.layout = dbc.Container(children=[
         style_cell={'textAlign': 'center','color': 'white', 'backgroundColor': '#000'},
     ),
     
+    html.Iframe(
+        srcDoc=open('shap_plot_clf.html', 'r').read(),
+        width='700px',
+        height='600px',
+        style={'margin-left': '50px', 'margin-top': '20px'}
+    ),
+    
+    html.Iframe(
+        srcDoc=open('shap_plot_cgb.html', 'r').read(),
+        width='1200px',
+        height='1000px',
+        style={'margin-left': '50px', 'margin-right': '50px'}
+    ),
     
     
     
-    html.Div(''' 
-             Признаки которые можно было добавить:
-             Криминальность района
-             Доход района - Средний доход жителей района, в котором находится жилье. Это может влиять на уровень цен на аренду
-             Индекс стоимости жизни - Индекс, отражающий общую стоимость жизни в конкретном городе или районе. Это может влиять на уровень цен
-             Уровень безработицы - Процент безработных в районе может быть связан с общим спросом на аренду
-             Инфляция - Уровень инфляции может влиять на уровень цен на жилье
-             Стоимость коммунальных услуг в Италии
-             Ставка привлечения капитала - Процентная ставка или ставка привлечения капитала может влиять на инвестиции в недвижимость
-             Ставка налога на недвижимость - Сведения о ставке налога на недвижимость в конкретном районе
-             Инвестиционные показатели - Например, количество новых строительств и инвестиций в недвижимость3 
-             Показатели финансовой стабильности - Например, рейтинги кредитоспособности района или города
-             ''', style={'height': '200px', "margin-top": "30px"}),  
-], 
+    
+    
+    
+    
+    html.Hr(),
+    html.H3("Comment", id="comments", style={'margin-left': '50px', 'margin-top': '70px', 'margin-bottom': '40px'}),
+
+    html.Div([
+        dcc.Markdown('''
+        В данном разделе я выразил своё личное мнение.
+        
+        Я бы выделил 2 подхода к решению этой задачи:
+        
+        * С точки зрения бизнеса
+        * "Kaggle соревнование"
+            
+        С моего подхода, ориентированного на бизнес, следует обратить внимание на несколько ключевых аспектов:
+        
+        * dataset public создержит большое кол-во аномальных и недействительных значений при достойной очистки остаётся 10% - 20% на обчуение модели.
+            
+        * dataset private содержит точно такие же проблемы .
+            
+        * хорошая модель, данные, бизнес метрика, которая была указана в задании и интегрирование модель в прод не имеют между собой ничего общего.
+            
+        * Обучение модели на неподготовленных данных показало хороший результат метрик на private dataset, но интеграция такой модели в прод становится проблемой,
+        в данном случае возникает аналогия с "Kaggle соревнованием" и погоней за метриками.
+            
+        * Обучение модели на нормально очищенных данных может привести к низким показателям как по MAE, так и по "бизнес-метрике", установленной в задании, 
+        так как нашу правильную модель на сабмите встречает неподготовленный private dataset.'''),
+    ], style={'text-align': 'justify', 'width': '80%', "margin-left": "50px", 'fontSize': '18px'}),
+    
+    
+    
+    
+    html.Div(''' ''', style={'height': '200px', "margin-top": "30px"}),  
+    
+    
+    ], 
     style={"backgroundColor": dark_theme["main-background"]}, 
 )
+
+
 
 if __name__ == '__main__':
     app.run_server(debug=True)
