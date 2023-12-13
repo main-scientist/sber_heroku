@@ -9,7 +9,8 @@ from dash_bootstrap_templates import load_figure_template
 from dash.dependencies import Input, Output
 import time
 
-file_id ="1YWbCavIigITOm5EtaE84CN0t1xhEmW9X"
+
+file_id ="1vYs5BOgiY-ElscsuXIxA2NWkLd9x-Ynm"
 url = f"https://drive.google.com/file/d/{file_id}/view?usp=sharing"
 url = 'https://drive.google.com/uc?export=download&confirm=1&id='+url.split('/')[-2]
 X_public = pd.read_csv(url)
@@ -221,8 +222,8 @@ app.layout = dbc.Container(children=[
         
         Сильная разница в цене, зависящая, от дат бронирования (в течении года $240 - ноябрь 20-30 $2300).
         
-        Хочу отметить что точно такая же недействительность в данных присуща dataset privat, на котором расчитываются соверновальные метрики моделей. Из этого вытекает
-        большое кол-во проблем и сама суть задачи попадает под сомнения. Об этом далее
+        Хочу отметить что точно такая же недействительность в данных присуща dataset private, на котором расчитываются соревновательные метрики моделей. Из этого вытекает
+        большое кол-во проблем и сама суть задачи попадает под сомнение. Об этом далее
     ''', style={"font-size": "18px", "margin-buttom": "20px", 'margin-left': '50px', "width": "900px", 'text-align': 'justify'}),
     
     
@@ -561,7 +562,7 @@ app.layout = dbc.Container(children=[
             
                 Данный способ показал лучший результат "бизнес метрики", но я считаю данную модель некомпетентной. Об этом далее.
             
-            * Two-level Gradient Boosting Gradient Boosting with BayesianOptimization (CatBoost)
+            * Two-level Gradient Boosting  with BayesianOptimization (CatBoost)
             
                 Разделение генеральной совокупности на две выборки по целевому признаку [μ - 3σ : μ + σ] | [μ + σ : μ + 3σ]
 
@@ -569,8 +570,8 @@ app.layout = dbc.Container(children=[
                 
                 Данный способ показал лучший результат по метрике MAE.
                 
-            * Three-level Gradient Boosting Gradient Boosting with BayesianOptimization (CatBoost)
-            * Four-level Gradient Boosting Gradient Boosting with BayesianOptimization (CatBoost)
+            * Three-level Gradient Boosting with BayesianOptimization (CatBoost)
+            * Four-level Gradient Boosting with BayesianOptimization (CatBoost)
         '''),
     ], style={'fontSize': '18px', 'margin-left': '50px', "width": "1200px", "margin-top": "40px"}),
     
@@ -625,6 +626,9 @@ app.layout = dbc.Container(children=[
         style_cell={'textAlign': 'center','color': 'white', 'backgroundColor': '#000'},
     ),
     
+    
+    html.Div('''Оценка разделения валидационных данных на две выборки по целевому признаку для two level gb''', style={"margin-left": "50px", "margin-top": "20px"}), 
+    
     html.Iframe(
         srcDoc=open('shap_plot_clf.html', 'r').read(),
         width='700px',
@@ -632,17 +636,14 @@ app.layout = dbc.Container(children=[
         style={'margin-left': '50px', 'margin-top': '20px'}
     ),
     
+    html.Div('''Shapley values for two level gb''', style={"margin-left": "50px"}), 
+    
     html.Iframe(
         srcDoc=open('shap_plot_cgb.html', 'r').read(),
         width='1200px',
         height='1000px',
         style={'margin-left': '50px', 'margin-right': '50px'}
     ),
-    
-    
-    
-    
-    
     
     
     html.Hr(),
@@ -668,7 +669,7 @@ app.layout = dbc.Container(children=[
         * Обучение модели на неподготовленных данных показало хороший результат метрик на private dataset, но интеграция такой модели в прод становится проблемой,
         в данном случае возникает аналогия с "Kaggle соревнованием" и погоней за метриками.
             
-        * Обучение модели на нормально очищенных данных может привести к низким показателям как по MAE, так и по "бизнес-метрике", установленной в задании, 
+        * Обучение модели на нормально очищенных данных привело привести к низким показателям как по MAE, так и по "бизнес-метрике", установленной в задании, 
         так как нашу правильную модель на сабмите встречает неподготовленный private dataset.'''),
     ], style={'text-align': 'justify', 'width': '80%', "margin-left": "50px", 'fontSize': '18px'}),
     
