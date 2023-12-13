@@ -11,6 +11,7 @@ file_id ="1YWbCavIigITOm5EtaE84CN0t1xhEmW9X"
 url = f"https://drive.google.com/file/d/{file_id}/view?usp=sharing"
 url = 'https://drive.google.com/uc?export=download&confirm=1&id='+url.split('/')[-2]
 X_public = pd.read_csv(url)
+df_features = pd.read_csv("features_process.csv")
 
 df_geo_city = pd.DataFrame({
     "region": ["Bergamo", "Bologna", "Firenze", "Milano", "Napoli", "Puglia", "Roma", "Sicilia", "Trentino", "Venezia"],
@@ -45,20 +46,7 @@ heatmap_data = pd.isnull(X_public)
 heatmap_fig = px.imshow(heatmap_data, 
                         labels=dict(color="Null Values"), 
                         color_continuous_scale='Viridis', title="Number of null value", template='darkly')
-heatmap_fig.update_layout(
-    annotations=[
-        dict(
-            text="Number of duplicate rows: 0",
-            showarrow=False,
-            xref="paper",
-            yref="paper",
-            x=0,
-            y=1.07,
-            font=dict(size=16),
-        )
-    ],
-    height=800
-)
+heatmap_fig.update_layout(height=800)
 median_price = X_public["price_usd"].median()
 mean_price = X_public["price_usd"].mean()
 price_fig = px.histogram(X_public, x="price_usd", marginal="box", title="Price (USD) with Median", template='darkly')
@@ -131,7 +119,6 @@ histogram_host_total_listings_count = px.histogram(X_public["host_total_listings
 histogram_host_verifications = px.histogram(X_public["host_verifications"], title="Histogram of Host verifications", template='darkly')
 histogram_accommodates = px.histogram(X_public["accommodates"], title="Histogram of Accommodates", template='darkly')
 histogram_number_of_reviews = px.histogram(X_public["number_of_reviews"], title="Histogram of Number of reviews", template='darkly')
-histogram_host_has_profile_pic = px.histogram(X_public["host_has_profile_pic"], title="Histogram of Number of reviews", template='darkly')
 histogram_distance_to_centre_city = px.histogram(X_public["distance_to_centre_city"], title="Histogram of distance to the centre of city", template='darkly')
 histogram_cat_distance = px.histogram(X_public["cat_distance"], title="Histogram of cat distance", template='darkly')
 
@@ -211,11 +198,31 @@ app.layout = dbc.Container(children=[
     - [Feature Engineering](#feature-engineering)
     - [Modeling](#modeling)
         - [Comparative analysis of models](#comparative-analysis-models)
-    ''', style={'position': 'fixed', 'top': 0, 'left': 0, 'background-color': '#000000', 'padding': '15px', 'z-index': 1000, "border-radius":"10px"}),
+    ''', style={'position': 'fixed', 'top': "30px", 'left': "10px", 'background-color': '#000000', 'padding-top': '15px', 'padding-left': '3px', 
+                'z-index': 1000, "border-radius":"10px", "width": "220px"}),
     
     html.H3("Explore Data Analysis", id="explore-data-analysis", style={'margin': '50px'}),
 
-    html.H4("Data Frame - Public", style={'margin-left': '50px'}),
+    html.H4("Data Frame - Public", style={'margin-left': '50px', "margin-buttom": "20px"}),
+    
+    dcc.Markdown('''
+        Dimension - (90757, 70)
+        
+        Number of duplicate rows: 0
+        
+        Dataset имеет большое кол-во пропущенных значений. Отсутвуют критически важные признаки, такие как квадратура съёмной недвижимости и время логирования. 
+        Присутствует большое кол-во разнообразных аномалий:
+        
+        Сдача водных видов транспортного средства
+        
+        Сдача обьектов недвижимости с указанием недействительных кол-ва благ (hostel, $240, 50 beds)
+        
+        Сильная разница в цене, зависящая, от дат бронирования (в течении года $240 - ноябрь 20-30 $2300).
+        
+        Хочу отметить что точно такая же недействительность в данных присуща dataset privat, на котором расчитываются соверновальные метрики моделей. Из этого вытекает
+        большое кол-во проблем и сама суть задачи попадает под сомнения. Об этом далее
+    ''', style={"font-size": "18px", "margin-buttom": "20px", 'margin-left': '50px', "width": "900px", 'text-align': 'justify'}),
+    
     
     dash_table.DataTable(
         id='table',
@@ -227,11 +234,11 @@ app.layout = dbc.Container(children=[
         style_cell={'maxWidth': 300, 'textAlign': 'center', 'overflow': 'hidden', 'textOverflow': 'ellipsis', 'color': 'white', 'backgroundColor': '#000'},
     ),
     
-    dcc.Graph(
-        id='heatmap',
-        figure=heatmap_fig,
-        style={'border': '2px solid black', "margin-bottom":"50px"}
-    ),
+    # dcc.Graph(
+    #     id='heatmap',
+    #     figure=heatmap_fig,
+    #     style={'border': '2px solid black', "margin-bottom":"50px"}
+    # ),
     
     dcc.Markdown('''
         ### Target - Price
@@ -243,11 +250,11 @@ app.layout = dbc.Container(children=[
     ''', style={'margin-left': '50px','fontSize': '18px'}),
     
     
-    dcc.Graph(
-        id='price_fig',
-        figure=price_fig,
-        style={'border': '2px solid black', "margin-bottom":"20px"}
-    ),
+    # dcc.Graph(
+    #     id='price_fig',
+    #     figure=price_fig,
+    #     style={'border': '2px solid black', "margin-bottom":"20px"}
+    # ),
     
     
     html.Div([
@@ -280,81 +287,101 @@ app.layout = dbc.Container(children=[
     ], style={'text-align': 'justify', 'display': 'inline-block', 'width': '50%', 'vertical-align': 'top', 'fontSize': '18px'}),
     
     
-    generate_hypothesis_block("Biserial", "sourse", "price_usd", 0.01143, 0.00056, 0.05, True),
-    dcc.Graph(
-        id='histogram_source',
-        figure=histogram_sourse,
-        style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
-    ),
+    # generate_hypothesis_block("Biserial", "sourse", "price_usd", 0.01143, 0.00056, 0.05, True),
+    # dcc.Graph(
+    #     id='histogram_source',
+    #     figure=histogram_sourse,
+    #     style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
+    # ),
     
-    generate_hypothesis_block("Biserial", "host_response_time", "price_usd", 0.00564, 0.08907, 0.05, False),
-    dcc.Graph(
-        id='histogram_host_response_time',
-        figure=histogram_host_response_time,
-        style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
-    ),
+    # generate_hypothesis_block("Biserial", "host_response_time", "price_usd", 0.00564, 0.08907, 0.05, False),
+    # dcc.Graph(
+    #     id='histogram_host_response_time',
+    #     figure=histogram_host_response_time,
+    #     style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
+    # ),
     
-    generate_hypothesis_block("Pearson", "host_response_rate", "price_usd", -0.02782, 0.0, 0.05, True),
-    dcc.Graph(
-        id='histogram_host_response_rate',
-        figure=histogram_host_response_rate,
-        style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
-    ), 
+    # generate_hypothesis_block("Pearson", "host_response_rate", "price_usd", -0.02782, 0.0, 0.05, True),
+    # dcc.Graph(
+    #     id='histogram_host_response_rate',
+    #     figure=histogram_host_response_rate,
+    #     style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
+    # ), 
     
-    generate_hypothesis_block("Pearson", "host_acceptance_rate", "price_usd", 0.05246, 0.0, 0.05, True),
-    dcc.Graph(
-        id='histogram_host_acceptance_rate',
-        figure=histogram_host_acceptance_rate,
-        style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
-    ), 
+    # generate_hypothesis_block("Pearson", "host_acceptance_rate", "price_usd", 0.05246, 0.0, 0.05, True),
+    # dcc.Graph(
+    #     id='histogram_host_acceptance_rate',
+    #     figure=histogram_host_acceptance_rate,
+    #     style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
+    # ), 
     
-    generate_hypothesis_block("Biserial", "host_is_superhost", "price_usd", 0.01452, 1e-05, 0.05, True),
-    dcc.Graph(
-        id='histogram_host_is_superhost',
-        figure=histogram_host_is_superhost,
-        style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
-    ), 
+    # generate_hypothesis_block("Biserial", "host_is_superhost", "price_usd", 0.01452, 1e-05, 0.05, True),
+    # dcc.Graph(
+    #     id='histogram_host_is_superhost',
+    #     figure=histogram_host_is_superhost,
+    #     style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
+    # ), 
 
-    generate_hypothesis_block("Pearson", "host_listings_count", "price_usd", 0.11413, 0.0, 0.05, True),
-    dcc.Graph(
-        id='histogram_host_listings_count',
-        figure=histogram_host_listings_count,
-        style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
-    ),
-    generate_hypothesis_block("Pearson", "host_total_listings_count", "price_usd", 0.09509, 0.0, 0.05, True),
-    dcc.Graph(
-        id='histogram_host_total_listings_count',
-        figure=histogram_host_total_listings_count,
-        style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
-    ), 
-    generate_hypothesis_block("Biserial", "host_verifications", "price_usd", 0.03171, 0.00056, 0.05, True),
-    dcc.Graph(
-        id='histogram_host_verifications',
-        figure=histogram_host_verifications,
-        style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
-    ), 
-    generate_hypothesis_block("Pearson", "accommodates", "price_usd", 0.35318, 0.00056, 0.05, True),
-    dcc.Graph(
-        id='histogram_accommodates',
-        figure=histogram_accommodates,
-        style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
-    ),
+    # generate_hypothesis_block("Pearson", "host_listings_count", "price_usd", 0.11413, 0.0, 0.05, True),
+    # dcc.Graph(
+    #     id='histogram_host_listings_count',
+    #     figure=histogram_host_listings_count,
+    #     style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
+    # ),
+    # generate_hypothesis_block("Pearson", "host_total_listings_count", "price_usd", 0.09509, 0.0, 0.05, True),
+    # dcc.Graph(
+    #     id='histogram_host_total_listings_count',
+    #     figure=histogram_host_total_listings_count,
+    #     style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
+    # ), 
+    # generate_hypothesis_block("Biserial", "host_verifications", "price_usd", 0.03171, 0.00056, 0.05, True),
+    # dcc.Graph(
+    #     id='histogram_host_verifications',
+    #     figure=histogram_host_verifications,
+    #     style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
+    # ), 
+    # generate_hypothesis_block("Pearson", "accommodates", "price_usd", 0.35318, 0.00056, 0.05, True),
+    # dcc.Graph(
+    #     id='histogram_accommodates',
+    #     figure=histogram_accommodates,
+    #     style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
+    # ),
     generate_hypothesis_block("Pearson", "number_of_reviews", "price_usd", -0.04753, 0.00056, 0.05, True),
     dcc.Graph(
         id='histogram_number_of_reviews',
         figure=histogram_number_of_reviews,
         style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
     ),
-    generate_hypothesis_block("Pearson", "host_has_profile_pic", "price_usd", 0.01902, 0.00056, 0.05, True),
-    dcc.Graph(
-        id='histogram_host_has_profile_pic',
-        figure=histogram_host_has_profile_pic,
-        style={'display': 'inline-block', 'width': '60%', 'vertical-align': 'top', 'margin-top': '60px'}
-    ),
     
     
     
-    html.H3("Feature Engineering", id="feature-engineering", style={'margin': '60px'}),
+    html.H3("Data Preparation", id="data-preparation", style={'margin': '50px'}),
+    
+    
+    html.Div([
+        dcc.Markdown('''
+            В некоторых признаках пропущенные значения заполнены аномалиями, средним или медианой
+        '''),
+    ], style={'fontSize': '18px', 'margin-left': '50px'}),
+    
+    
+    html.Div(children=[
+        dash_table.DataTable(
+            id='feature-table',
+            columns=[
+                {'name': col, 'id': col} for col in df_features.columns
+            ],
+            data=df_features.to_dict('records'),
+            style_table={'height': '400px', 'overflowY': 'auto'},
+            style_cell={'color': 'white', 'backgroundColor': '#000', 'textAlign': 'center', "max-width": "400px", 'whiteSpace': 'pre-wrap'},
+        ),
+    ],
+        style={"margin-left": "50px", "width": "1200px"}),
+    
+    
+    
+    
+    html.H3("Feature Engineering", id="feature-engineering", style={'margin': '50px'}),
     
     
     html.Div([
@@ -363,10 +390,10 @@ app.layout = dbc.Container(children=[
         '''),
     ], style={'fontSize': '18px', 'margin-left': '50px'}),
     
-    dcc.Graph(
-        id='densitymapbox_price',
-        figure=densitymapbox_price,
-    ),
+    # dcc.Graph(
+    #     id='densitymapbox_price',
+    #     figure=densitymapbox_price,
+    # ),
     
     
     html.Div([
@@ -421,9 +448,7 @@ app.layout = dbc.Container(children=[
             * `person_per_beds` - кол-во человек на кровать.
             * Эти признаки (3 последних) могут давать представление о плотности проживания или комфорте для каждого измерения пространства.
         '''),
-    ], style={'fontSize': '18px', 'margin-left': '50px', "margin-top": "20px"}),
-    
-    
+    ], style={'fontSize': '18px', 'margin-left': '50px', "margin-top": "20px"}),    
     
     
     html.H3("Modeling", id="modeling", style={'margin-left': '50px', 'margin-top': '70px', 'margin-bottom': '40px'}),
@@ -573,13 +598,11 @@ app.layout = dbc.Container(children=[
             {'interval': '[μ - 3σ : μ + σ]', 'two_level_gb': 'Log Target RMSE', 'three_level_gb': 'Log Target RMSE', 'four_level_gb': 'Log Target RMSE', 'earned_relative_total_value': '45%'},
             {'interval': '[μ + σ : μ + 3σ]', 'two_level_gb': 'Log Target MAPE', 'three_level_gb': 'Log Target MAPE', 'four_level_gb': 'Log Target MAPE', 'earned_relative_total_value': '32%'},
             {'interval': '[μ + 3σ : μ + 5σ]', 'two_level_gb': '-', 'three_level_gb': 'Log Target MAPE', 'four_level_gb': 'Log Target MAPE', 'earned_relative_total_value': '22%'},
-            {'interval': '[μ + 5σ : μ + 12σ]', 'two_level_gb': '-', 'three_level_gb': '-', 'four_level_gb': 'Log Target MAPE', 'earned_relative_total_value': '18%'},
+            {'interval': '[μ + 5σ : μ + 12σ]', 'two_level_gb': '-', 'three_level_gb': '-', 'four_level_gb': 'Target MAPE', 'earned_relative_total_value': '18%'},
         ],
         style_table={'margin-left': '50px', "width": "1000px"},
         style_cell={'textAlign': 'center','color': 'white', 'backgroundColor': '#000'},
     ),
-    
-    
     
     
     

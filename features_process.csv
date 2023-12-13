@@ -1,0 +1,84 @@
+feature,stage,description
+id,not in model,-
+listing_url,not in model,-
+source,in model,-
+name,not in model,-
+description,in model,text_feature
+neighborhood_overview,not in model,много пропусков
+host_name,not in model,-
+host_since,in model,-
+host_location,not in model,много пропусков
+host_about,not in model,много пропусков
+host_response_time,in model,Number of null value: 11623
+host_response_rate,in model,replaced by anomaly | Number of null value: 11530
+host_acceptance_rate,in model,replaced by anomaly | Number of null value: 9682
+host_is_superhost,in model,Number of null value: 0
+host_neighbourhood,not in model,-
+host_listings_count,in model, Number of null value: 0
+host_total_listings_count,in model,replaced by anomaly
+host_verifications,in model,-
+host_has_profile_pic,in model,-
+host_identity_verified,in model,-
+neighbourhood,not in model,много пропусков | Number of null value: 33854
+neighbourhood_cleansed,in model,теперь это city | Number of null value: 0
+neighbourhood_group_cleansed,not in model,много пропусков
+latitude,in model,-
+longitude,in model,-
+property_type,in model,
+room_type,in model,
+accommodates,in model,text_feature
+bathrooms,not in model,100% null value
+bathrooms_text,in model,replaced by median | Number of null value: 98
+bedrooms,in model,replaced by median | Number of null value: 2192
+beds,in model,replaced by mediancatboost | Number of null value: 903
+amenities,in model,-
+price,in model,-
+minimum_nights,in model,-
+maximum_nights,not in model,выкинул признак от него никакой пользы
+minimum_minimum_nights,in model,-
+maximum_minimum_nights,in model,-
+minimum_maximum_nights,not in model,выкинул признак от него никакой пользы
+maximum_maximum_nights,not in model,выкинул признак от него никакой пользы
+minimum_nights_avg_ntm,in model,-
+maximum_nights_avg_ntm,not in model,выкинул признак от него никакой пользы
+calendar_updated,not in model,Number of null value: 71914
+has_availability,in model,-
+availability_30,in model,-
+availability_60,in model,-
+availability_90,in model,-
+availability_365,in model,-
+calendar_last_scraped,not in model,-
+number_of_reviews,in model,-
+number_of_reviews_ltm,in model,-
+number_of_reviews_l30d,in model,-
+first_review,in model,replaced by median
+last_review,in model,replaced by median
+review_scores_rating,in model, replaced by anomaly | Number of null value: 16994
+review_scores_accuracy,in model, replaced by anomaly | Number of null value: 17433
+review_scores_cleanliness,in model, replaced by anomaly | Number of null value: 17431
+review_scores_checkin,in model, replaced by anomaly | Number of null value: 17447
+review_scores_communication,in model, replaced by anomaly | Number of null value: 17440
+review_scores_location,in model, replaced by anomaly | Number of null value: 17447
+review_scores_value,in model, replaced by anomaly | Number of null value: 17451
+license,not in model,много пропусков | Number of null value: 63516
+instant_bookable,in model,-
+calculated_host_listings_count,in model,требует очистки
+calculated_host_listings_count_entire_homes,in model,требует очистки
+calculated_host_listings_count_private_rooms,in model,требует очистки
+calculated_host_listings_count_shared_rooms,in model,требует очистки
+reviews_per_month,in model, replaced by anomaly | Number of null value: 16994
+city,in model,cat |теперь это region | Number of null value: 0
+type,in model,столбец принимает только одно значение нет смысла использовать
+difference_review,in model,-
+distance_to_centre_city,in model,-
+cat_distance,in model,-
+len_description,in model,-
+bathrooms_num,in model,-
+bedrooms_num,in model,-
+beds_num,in model,-
+bathrooms_num2,in model,-
+bedrooms_num2,in model,-
+beds_num2,in model,-
+person_per_bathrooms,in model,-
+person_per_bedrooms,in model,-
+person_per_beds,in model,-
