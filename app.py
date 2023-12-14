@@ -186,10 +186,10 @@ def generate_hypothesis_block(method, a, b, correlation_coefficient, p_value, si
 
 app.layout = dbc.Container(children=[
     # html.H2("В данный момент презентация находится в стадии разработки"),
-    html.H2("Predicting Real Estate Prices from the Airbnb Portal"),
+    html.H2("Predicting Real Estate Prices from the Airbnb Portal", style={"margin-top": "10px"}),
     
     dcc.Markdown('''
-       Плотников Иван Андреевич
+       Плотников Иван Андреевич студент 3 курса РЭУ
     ''', style={"font-size": "18px", "margin-bottom": "20px", "margin-top": "20px", 'margin-left': '50px'}),
     
     
